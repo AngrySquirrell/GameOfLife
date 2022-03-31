@@ -8,6 +8,25 @@ canvas.height = Math.floor((screen.height*.95)/10)*10;
 const COLS = canvas.width / resolution;
 const ROWS = canvas.height / resolution;
 
+const times = [];
+let fps;
+
+function refreshLoop() {
+  window.requestAnimationFrame(() => {
+    const now = performance.now();
+    while (times.length > 0 && times[0] <= now - 1000) {
+      times.shift();
+    }
+    times.push(now);
+    fps = times.length;
+    console.log(fps);
+    refreshLoop();
+  });
+}
+
+refreshLoop();
+
+
 function buildGrid() {
     return new Array(COLS).fill(null)
         .map(() => new Array(ROWS).fill(null)

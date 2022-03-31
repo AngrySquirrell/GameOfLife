@@ -1,7 +1,7 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
-const resolution = 5;
+const resolution = 10;
 canvas.width = Math.floor((screen.width*.98)/10)*10;
 canvas.height = Math.floor((screen.height*.90)/10)*10;
 console.log(canvas.height);
@@ -9,6 +9,25 @@ console.log(canvas.width);
 
 const COLS = canvas.width / resolution;
 const ROWS = canvas.height / resolution;
+
+const times = [];
+let fps;
+
+function refreshLoop() {
+  window.requestAnimationFrame(() => {
+    const now = performance.now();
+    while (times.length > 0 && times[0] <= now - 1000) {
+      times.shift();
+    }
+    times.push(now);
+    fps = times.length;
+    console.log(fps);
+    refreshLoop();
+  });
+}
+
+refreshLoop();
+
 
 class Cell {
     constructor(){
@@ -103,4 +122,21 @@ function render(grid){
             ctx.fill()
         }
     }
+
 }
+
+// //Make a function that convert csv files into JSON ones
+// function csvToJson(csv){
+//     const lines = csv.split('\n');
+//     const result = [];
+//     const headers = lines[0].split(',');
+//     for (let i = 1; i < lines.length; i++) {
+//         const obj = {};
+//         const currentline = lines[i].split(',');
+//         for (let j = 0; j < headers.length; j++) {
+//             obj[headers[j]] = currentline[j];
+//         }
+//         result.push(obj);
+//     }
+//     return result;
+// }
